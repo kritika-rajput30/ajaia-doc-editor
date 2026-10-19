@@ -89,7 +89,7 @@ export function RichTextEditor({
       )}
 
       {/* Canvas Paper Area - Exclusively scrollable */}
-      <div className="flex-1 overflow-y-auto py-8 px-4 flex justify-center">
+      <div className="flex-1 min-h-0 overflow-y-auto py-8 px-4 flex justify-center scroll-smooth">
         <div className="w-full max-w-[850px] min-h-[1050px] bg-white shadow-xs hover:shadow-sm transition-shadow rounded-sm border border-slate-200/80 p-12 md:p-16 print-page">
           <EditorContent editor={editor} />
         </div>

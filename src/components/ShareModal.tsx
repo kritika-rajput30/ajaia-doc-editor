@@ -16,6 +16,9 @@ import {
   Eye,
   Edit3,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface CollaboratorInfo {
   id: string;
@@ -152,7 +155,7 @@ export function ShareModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs animate-in fade-in duration-150">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150">
       <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-150">
         {/* Header */}
         <div className="px-6 pt-5 pb-4 border-b border-slate-100 flex items-center justify-between">
@@ -171,7 +174,7 @@ export function ShareModal({
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+            className="p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -201,7 +204,7 @@ export function ShareModal({
                         setSelectedUserId(e.target.value);
                         setCustomEmail("");
                       }}
-                      className="w-full text-xs px-3 py-2.5 border border-slate-200 rounded-lg bg-slate-50/50 hover:bg-white focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-800"
+                      className="w-full text-xs px-3 py-2 border border-slate-200 rounded-lg bg-slate-50/50 hover:bg-white focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-800"
                     >
                       <option value="">Select team member...</option>
                       {availableUsers.map((u) => (
@@ -216,7 +219,7 @@ export function ShareModal({
                       placeholder="Enter collaborator email..."
                       value={customEmail}
                       onChange={(e) => setCustomEmail(e.target.value)}
-                      className="w-full text-xs px-3 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-800"
+                      className="w-full text-xs px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-800"
                     />
                   )}
                 </div>
@@ -224,20 +227,20 @@ export function ShareModal({
                 <select
                   value={permission}
                   onChange={(e) => setPermission(e.target.value as "editor" | "viewer")}
-                  className="text-xs px-3 py-2.5 border border-slate-200 rounded-lg bg-slate-50/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-700 font-medium"
+                  className="text-xs px-3 py-2 border border-slate-200 rounded-lg bg-slate-50/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-700 font-medium"
                 >
-                  <option value="editor">Editor (Can edit)</option>
-                  <option value="viewer">Viewer (Can view)</option>
+                  <option value="editor">Editor</option>
+                  <option value="viewer">Viewer</option>
                 </select>
 
-                <button
+                <Button
                   type="submit"
                   disabled={isLoading || (!selectedUserId && !customEmail.trim())}
-                  className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 shadow-xs"
+                  size="default"
                 >
                   <UserPlus className="w-3.5 h-3.5" />
                   <span>Share</span>
-                </button>
+                </Button>
               </div>
 
               {error && (
@@ -260,11 +263,10 @@ export function ShareModal({
               {owner && (
                 <div className="py-2.5 flex items-center justify-between text-xs">
                   <div className="flex items-center gap-2.5">
-                    <img
-                      src={owner.avatar_url}
-                      alt={owner.name}
-                      className="w-7 h-7 rounded-full object-cover ring-1 ring-slate-200"
-                    />
+                    <Avatar className="w-7 h-7">
+                      <AvatarImage src={owner.avatar_url} alt={owner.name} />
+                      <AvatarFallback>{owner.name[0]}</AvatarFallback>
+                    </Avatar>
                     <div>
                       <div className="font-semibold text-slate-800 flex items-center gap-1.5">
                         {owner.name}
@@ -275,9 +277,7 @@ export function ShareModal({
                       <div className="text-[11px] text-slate-400">{owner.email}</div>
                     </div>
                   </div>
-                  <span className="text-xs font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-md">
-                    Owner
-                  </span>
+                  <Badge variant="secondary">Owner</Badge>
                 </div>
               )}
 
@@ -287,11 +287,10 @@ export function ShareModal({
                 return (
                   <div key={c.id} className="py-2.5 flex items-center justify-between text-xs">
                     <div className="flex items-center gap-2.5">
-                      <img
-                        src={c.user.avatar_url}
-                        alt={c.user.name}
-                        className="w-7 h-7 rounded-full object-cover ring-1 ring-slate-200"
-                      />
+                      <Avatar className="w-7 h-7">
+                        <AvatarImage src={c.user.avatar_url} alt={c.user.name} />
+                        <AvatarFallback>{c.user.name[0]}</AvatarFallback>
+                      </Avatar>
                       <div>
                         <div className="font-medium text-slate-800 flex items-center gap-1.5">
                           {c.user.name}
@@ -321,16 +320,16 @@ export function ShareModal({
                           </select>
                           <button
                             onClick={() => handleRemoveCollaborator(c.user_id)}
-                            className="p-1 text-slate-400 hover:text-rose-600 rounded-md hover:bg-rose-50 transition-colors"
+                            className="p-1 text-slate-400 hover:text-rose-600 rounded-md hover:bg-rose-50 transition-colors cursor-pointer"
                             title="Remove access"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         </div>
                       ) : (
-                        <span className="text-xs text-slate-600 capitalize bg-slate-100 px-2 py-1 rounded-md">
+                        <Badge variant={c.permission === "editor" ? "success" : "secondary"} className="capitalize">
                           {c.permission}
-                        </span>
+                        </Badge>
                       )}
                     </div>
                   </div>
@@ -348,9 +347,11 @@ export function ShareModal({
 
         {/* Footer */}
         <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
-          <button
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
             onClick={handleCopyLink}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-xs font-medium text-slate-700 transition-colors shadow-2xs"
           >
             {copied ? (
               <>
@@ -363,14 +364,11 @@ export function ShareModal({
                 <span>Copy link</span>
               </>
             )}
-          </button>
+          </Button>
 
-          <button
-            onClick={onClose}
-            className="px-4 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg transition-colors"
-          >
+          <Button type="button" size="sm" onClick={onClose}>
             Done
-          </button>
+          </Button>
         </div>
       </div>
     </div>
