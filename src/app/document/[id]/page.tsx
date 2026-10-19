@@ -8,6 +8,7 @@ import { RichTextEditor } from "@/components/RichTextEditor";
 import { ShareModal } from "@/components/ShareModal";
 import { VersionHistoryModal } from "@/components/VersionHistoryModal";
 import { AttachmentsDrawer } from "@/components/AttachmentsDrawer";
+import { CommentsDrawer } from "@/components/CommentsDrawer";
 import {
   ArrowLeft,
   Cloud,
@@ -24,6 +25,8 @@ import {
   Shield,
   AlertCircle,
   FileText,
+  MessageSquare,
+  Users,
 } from "lucide-react";
 
 function DocumentEditorContent() {
@@ -45,6 +48,8 @@ function DocumentEditorContent() {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
   const [isAttachmentsOpen, setIsAttachmentsOpen] = useState(false);
+  const [isCommentsOpen, setIsCommentsOpen] = useState(false);
+  const [commentsCount, setCommentsCount] = useState(0);
   const [isExportMenuOpen, setIsExportMenuOpen] = useState(false);
 
   const saveTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -280,6 +285,41 @@ function DocumentEditorContent() {
 
         {/* Right Toolbar Actions */}
         <div className="flex items-center gap-2">
+          {/* Live Presence Collaborator Indicators */}
+          {documentData?.collaborators && documentData.collaborators.length > 0 && (
+            <div className="hidden sm:flex items-center -space-x-1.5 mr-1" title="Collaborators on this document">
+              {documentData.collaborators.slice(0, 3).map((c: any) => {
+                const avatar = c.user?.avatar_url || c.user?.avatarUrl;
+                const name = c.user?.name || "Teammate";
+                return (
+                  <div key={c.id} className="relative group/avatar" title={`${name} (${c.permission})`}>
+                    <img
+                      src={avatar}
+                      alt={name}
+                      className="w-6 h-6 rounded-full object-cover ring-2 ring-emerald-400 bg-white"
+                    />
+                    <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-500 ring-1 ring-white animate-pulse" />
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Comments Button */}
+          <button
+            onClick={() => setIsCommentsOpen(true)}
+            className="p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs font-medium text-slate-700 transition-colors flex items-center gap-1.5 relative"
+            title="Comments & Discussions"
+          >
+            <MessageSquare className="w-3.5 h-3.5 text-slate-500" />
+            <span className="hidden sm:inline">Comments</span>
+            {commentsCount > 0 && (
+              <span className="text-[9px] bg-blue-100 text-blue-700 font-bold px-1.5 py-0.2 rounded-full">
+                {commentsCount}
+              </span>
+            )}
+          </button>
+
           {/* Version History Button */}
           <button
             onClick={() => setIsHistoryModalOpen(true)}
@@ -430,6 +470,14 @@ function DocumentEditorContent() {
             attachments: updatedAtts,
           }));
         }}
+      />
+
+      {/* Comments & Discussions Drawer */}
+      <CommentsDrawer
+        documentId={documentId}
+        isOpen={isCommentsOpen}
+        onClose={() => setIsCommentsOpen(false)}
+        onCommentCountChange={(count) => setCommentsCount(count)}
       />
     </div>
   );
