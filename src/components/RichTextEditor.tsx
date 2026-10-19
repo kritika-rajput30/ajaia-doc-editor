@@ -69,15 +69,15 @@ export function RichTextEditor({
   const readingTimeMin = Math.max(1, Math.ceil(wordCount / 200));
 
   return (
-    <div className="flex flex-col flex-1 min-h-0 bg-slate-100">
+    <div className="flex flex-col flex-1 h-full min-h-0 bg-slate-100 overflow-hidden">
       {/* Google Docs Toolbar */}
-      <div className="no-print">
+      <div className="flex-shrink-0 z-20 no-print">
         <EditorToolbar editor={editor} readOnly={readOnly} />
       </div>
 
       {/* Viewing Mode Banner */}
       {readOnly && (
-        <div className="bg-amber-50 border-b border-amber-200/80 px-4 py-2.5 text-xs text-amber-900 flex items-center justify-between no-print">
+        <div className="flex-shrink-0 bg-amber-50 border-b border-amber-200/80 px-4 py-2.5 text-xs text-amber-900 flex items-center justify-between no-print">
           <div className="flex items-center gap-2">
             <Eye className="w-4 h-4 text-amber-600 flex-shrink-0" />
             <span>
@@ -88,7 +88,7 @@ export function RichTextEditor({
         </div>
       )}
 
-      {/* Canvas Paper Area */}
+      {/* Canvas Paper Area - Exclusively scrollable */}
       <div className="flex-1 overflow-y-auto py-8 px-4 flex justify-center">
         <div className="w-full max-w-[850px] min-h-[1050px] bg-white shadow-xs hover:shadow-sm transition-shadow rounded-sm border border-slate-200/80 p-12 md:p-16 print-page">
           <EditorContent editor={editor} />
@@ -96,7 +96,7 @@ export function RichTextEditor({
       </div>
 
       {/* Editor Footer / Word Count Bar */}
-      <div className="bg-white border-t border-slate-200 px-6 py-2 flex items-center justify-between text-xs text-slate-500 no-print">
+      <div className="flex-shrink-0 bg-white border-t border-slate-200 px-6 py-2 flex items-center justify-between text-xs text-slate-500 no-print">
         <div className="flex items-center gap-4">
           <span className="flex items-center gap-1.5">
             <FileText className="w-3.5 h-3.5 text-slate-400" />

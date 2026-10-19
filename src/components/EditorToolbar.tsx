@@ -63,7 +63,7 @@ export function EditorToolbar({ editor, readOnly = false }: EditorToolbarProps) 
   };
 
   return (
-    <div className="sticky top-0 z-20 bg-slate-50/95 backdrop-blur-md border-y border-slate-200/90 px-3 py-1.5 flex flex-wrap items-center gap-1 shadow-2xs">
+    <div className="z-20 bg-slate-50/95 backdrop-blur-md border-b border-slate-200/90 px-3 py-1.5 flex flex-wrap items-center gap-1 shadow-2xs">
       {/* Undo / Redo */}
       <div className="flex items-center">
         <button

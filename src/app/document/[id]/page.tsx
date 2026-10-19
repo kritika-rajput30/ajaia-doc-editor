@@ -199,9 +199,9 @@ function DocumentEditorContent() {
   const permission = documentData?.permission || "viewer";
 
   return (
-    <div className="min-h-screen bg-slate-100 flex flex-col">
+    <div className="h-screen max-h-screen bg-slate-100 flex flex-col overflow-hidden">
       {/* Top Google Docs Navigation Bar */}
-      <header className="sticky top-0 z-30 bg-white border-b border-slate-200 px-4 py-2 flex items-center justify-between no-print shadow-2xs">
+      <header className="flex-shrink-0 z-30 bg-white border-b border-slate-200 px-4 py-2 flex items-center justify-between no-print shadow-2xs">
         {/* Left: Back Arrow + Document Title + Auto-Save Status */}
         <div className="flex items-center gap-3 min-w-0">
           <button
