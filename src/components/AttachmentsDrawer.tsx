@@ -77,9 +77,10 @@ export function AttachmentsDrawer({
     }
   };
 
-  const getFileIcon = (mimeType: string) => {
-    if (mimeType.startsWith("image/")) return <Image className="w-4 h-4 text-emerald-500" />;
-    if (mimeType.includes("pdf") || mimeType.includes("text"))
+  const getFileIcon = (mimeType?: string) => {
+    const type = (mimeType || "").toLowerCase();
+    if (type.startsWith("image/")) return <Image className="w-4 h-4 text-emerald-500" />;
+    if (type.includes("pdf") || type.includes("text"))
       return <FileText className="w-4 h-4 text-blue-500" />;
     return <File className="w-4 h-4 text-slate-500" />;
   };
@@ -141,35 +142,41 @@ export function AttachmentsDrawer({
               No files attached to this document yet.
             </div>
           ) : (
-            attachments.map((att) => (
-              <div
-                key={att.id}
-                className="p-3 bg-slate-50 hover:bg-slate-100/80 rounded-xl border border-slate-200/60 transition-colors flex items-center justify-between group"
-              >
-                <div className="flex items-center gap-2.5 min-w-0 pr-2">
-                  <div className="p-2 bg-white rounded-lg shadow-2xs">
-                    {getFileIcon(att.file_type)}
-                  </div>
-                  <div className="min-w-0">
-                    <div className="text-xs font-semibold text-slate-800 truncate">
-                      {att.filename}
-                    </div>
-                    <div className="text-[10px] text-slate-400">
-                      {(att.file_size / 1024).toFixed(1)} KB •{" "}
-                      {new Date(att.created_at).toLocaleDateString()}
-                    </div>
-                  </div>
-                </div>
+            attachments.map((att) => {
+              const fileType = att.file_type || (att as any).fileType || "";
+              const fileSize = Number(att.file_size || (att as any).fileSize || 0);
+              const createdAt = att.created_at || (att as any).createdAt || new Date().toISOString();
 
-                <a
-                  href={`/api/documents/${documentId}/export?format=txt`}
-                  className="p-1.5 text-slate-400 hover:text-blue-600 rounded-md hover:bg-white transition-colors"
-                  title="Download"
+              return (
+                <div
+                  key={att.id}
+                  className="p-3 bg-slate-50 hover:bg-slate-100/80 rounded-xl border border-slate-200/60 transition-colors flex items-center justify-between group"
                 >
-                  <Download className="w-3.5 h-3.5" />
-                </a>
-              </div>
-            ))
+                  <div className="flex items-center gap-2.5 min-w-0 pr-2">
+                    <div className="p-2 bg-white rounded-lg shadow-2xs">
+                      {getFileIcon(fileType)}
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-xs font-semibold text-slate-800 truncate">
+                        {att.filename}
+                      </div>
+                      <div className="text-[10px] text-slate-400">
+                        {(fileSize / 1024).toFixed(1)} KB •{" "}
+                        {new Date(createdAt).toLocaleDateString()}
+                      </div>
+                    </div>
+                  </div>
+
+                  <a
+                    href={`/api/documents/${documentId}/export?format=txt`}
+                    className="p-1.5 text-slate-400 hover:text-blue-600 rounded-md hover:bg-white transition-colors"
+                    title="Download"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                  </a>
+                </div>
+              );
+            })
           )}
         </div>
       </div>

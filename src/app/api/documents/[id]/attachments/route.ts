@@ -75,10 +75,14 @@ export async function POST(
       success: true,
       attachment: {
         id: attachmentId,
+        document_id: id,
         documentId: id,
         filename,
+        file_type: fileType,
         fileType,
+        file_size: fileSize,
         fileSize,
+        created_at: now,
         createdAt: now,
       },
     });
