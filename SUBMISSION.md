@@ -4,7 +4,7 @@
 **Email**: kritikarajput203@gmail.com  
 **Role**: AI-Native Full Stack Product Engineer (Take-Home Assessment)  
 **GitHub Repository**: [https://github.com/kritika-rajput30/ajaia-doc-editor](https://github.com/kritika-rajput30/ajaia-doc-editor)  
-**Live Product URL**: [https://ajaia-doc-editor.vercel.app](https://github.com/kritika-rajput30/ajaia-doc-editor) *(Deployable via Vercel/Node with zero config)*  
+**Live Product URL**: [https://ajaia-doc-editor-zeta.vercel.app](https://ajaia-doc-editor-zeta.vercel.app)  
 **Walkthrough Video URL**: [https://youtu.be/AjaiaDocsDemo](https://github.com/kritika-rajput30/ajaia-doc-editor/blob/main/WALKTHROUGH_SCRIPT.md) *(See WALKTHROUGH_VIDEO.txt and WALKTHROUGH_SCRIPT.md for full walkthrough outline)*  
 
 ---

@@ -5,8 +5,8 @@ A lightweight, high-performance collaborative document editor inspired by Google
 ---
 
 ## Live Demo & Repository
+- **Live Deployment**: [https://ajaia-doc-editor-zeta.vercel.app](https://ajaia-doc-editor-zeta.vercel.app)
 - **GitHub Repository**: [https://github.com/kritika-rajput30/ajaia-doc-editor](https://github.com/kritika-rajput30/ajaia-doc-editor)
-- **Live Deployment**: Ready for deployment to Vercel, Railway, or Render. (See Deployment section below)
 
 ---
 
