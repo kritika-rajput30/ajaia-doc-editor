@@ -62,7 +62,7 @@ export function getDatabase(): DatabaseSync {
     fs.mkdirSync(dataDir, { recursive: true });
   }
 
-  const dbPath = path.join(dataDir, "ajaia-docs.sqlite");
+  const dbPath = process.env.DATABASE_PATH || path.join(dataDir, "ajaia-docs.sqlite");
   const db = new DatabaseSync(dbPath);
 
   // Set busy timeout and WAL mode for concurrent access
