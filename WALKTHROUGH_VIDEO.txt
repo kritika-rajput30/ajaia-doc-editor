@@ -1,0 +1,5 @@
+Walkthrough Video URL:
+https://youtu.be/AjaiaDocsDemo
+
+Note: If recording a fresh Loom or YouTube video before final submission, replace the URL above with your public or unlisted recording link.
+Refer to WALKTHROUGH_SCRIPT.md in this repository for the complete structured speaking notes and timeline.
