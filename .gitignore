@@ -39,3 +39,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local sqlite database
+*.sqlite
+*.sqlite-journal
+*.db
+*.db-journal
+data/
+
+# agent rules
+AGENTS.md
