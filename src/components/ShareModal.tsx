@@ -19,6 +19,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Select,
+  SelectGroup,
+  SelectValue,
+  SelectTrigger,
+  SelectContent,
+  SelectLabel,
+  SelectItem,
+} from "@/components/ui/select";
 
 interface CollaboratorInfo {
   id: string;
@@ -63,6 +72,7 @@ export function ShareModal({
   const { users, currentUser, fetchWithUser } = useUser();
   const [selectedUserId, setSelectedUserId] = useState("");
   const [customEmail, setCustomEmail] = useState("");
+  const [isEmailMode, setIsEmailMode] = useState(false);
   const [permission, setPermission] = useState<"editor" | "viewer">("editor");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -192,51 +202,95 @@ export function ShareModal({
           ) : (
             /* Invite form */
             <form onSubmit={handleAddCollaborator} className="space-y-3">
-              <label className="block text-xs font-semibold text-slate-700">
-                Add teammates or collaborators
-              </label>
+              <div className="flex items-center justify-between">
+                <label className="block text-xs font-semibold text-slate-700">
+                  Add teammates or collaborators
+                </label>
+                {availableUsers.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsEmailMode(!isEmailMode);
+                      setSelectedUserId("");
+                      setCustomEmail("");
+                    }}
+                    className="text-[11px] text-blue-600 hover:text-blue-700 font-medium cursor-pointer"
+                  >
+                    {isEmailMode ? "Choose from team list" : "Enter email instead"}
+                  </button>
+                )}
+              </div>
+
               <div className="flex gap-2">
                 <div className="flex-1 relative">
-                  {availableUsers.length > 0 ? (
-                    <select
-                      value={selectedUserId}
-                      onChange={(e) => {
-                        setSelectedUserId(e.target.value);
-                        setCustomEmail("");
-                      }}
-                      className="w-full text-xs px-3 py-2 border border-slate-200 rounded-lg bg-slate-50/50 hover:bg-white focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-800"
-                    >
-                      <option value="">Select team member...</option>
-                      {availableUsers.map((u) => (
-                        <option key={u.id} value={u.id}>
-                          {u.name} ({u.role}) — {u.email}
-                        </option>
-                      ))}
-                    </select>
-                  ) : (
+                  {isEmailMode || availableUsers.length === 0 ? (
                     <input
                       type="email"
                       placeholder="Enter collaborator email..."
                       value={customEmail}
                       onChange={(e) => setCustomEmail(e.target.value)}
-                      className="w-full text-xs px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-800"
+                      className="w-full h-9 text-xs px-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-800 bg-white"
                     />
+                  ) : (
+                    <Select
+                      value={selectedUserId}
+                      onValueChange={(val) => {
+                        setSelectedUserId(val);
+                        setCustomEmail("");
+                      }}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select team member to invite..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Team Members</SelectLabel>
+                          {availableUsers.map((u) => (
+                            <SelectItem key={u.id} value={u.id}>
+                              <div className="flex items-center gap-2">
+                                <Avatar className="w-4 h-4 flex-shrink-0">
+                                  <AvatarImage src={u.avatar_url} />
+                                  <AvatarFallback>{u.name[0]}</AvatarFallback>
+                                </Avatar>
+                                <span className="font-medium text-slate-800">{u.name}</span>
+                                <span className="text-[11px] text-slate-400">({u.role})</span>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
                   )}
                 </div>
 
-                <select
+                <Select
                   value={permission}
-                  onChange={(e) => setPermission(e.target.value as "editor" | "viewer")}
-                  className="text-xs px-3 py-2 border border-slate-200 rounded-lg bg-slate-50/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-700 font-medium"
+                  onValueChange={(val: "editor" | "viewer") => setPermission(val)}
                 >
-                  <option value="editor">Editor</option>
-                  <option value="viewer">Viewer</option>
-                </select>
+                  <SelectTrigger className="w-28 flex-shrink-0">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent align="end">
+                    <SelectItem value="editor">
+                      <div className="flex items-center gap-1.5 font-medium">
+                        <Edit3 className="w-3.5 h-3.5 text-blue-600" />
+                        <span>Editor</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="viewer">
+                      <div className="flex items-center gap-1.5 font-medium">
+                        <Eye className="w-3.5 h-3.5 text-amber-600" />
+                        <span>Viewer</span>
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
 
                 <Button
                   type="submit"
                   disabled={isLoading || (!selectedUserId && !customEmail.trim())}
                   size="default"
+                  className="h-9"
                 >
                   <UserPlus className="w-3.5 h-3.5" />
                   <span>Share</span>
@@ -305,22 +359,33 @@ export function ShareModal({
                     <div className="flex items-center gap-2">
                       {isOwner ? (
                         <div className="flex items-center gap-1.5">
-                          <select
+                          <Select
                             value={c.permission}
-                            onChange={(e) =>
-                              handleUpdatePermission(
-                                c.user_id,
-                                e.target.value as "editor" | "viewer"
-                              )
+                            onValueChange={(val: "editor" | "viewer") =>
+                              handleUpdatePermission(c.user_id, val)
                             }
-                            className="text-xs px-2 py-1 border border-slate-200 rounded-md bg-white text-slate-700 font-medium focus:ring-1 focus:ring-blue-500"
                           >
-                            <option value="editor">Editor</option>
-                            <option value="viewer">Viewer</option>
-                          </select>
+                            <SelectTrigger className="h-8 w-28 text-xs bg-slate-50 hover:bg-slate-100 border-slate-200">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent align="end">
+                              <SelectItem value="editor">
+                                <div className="flex items-center gap-1.5 font-medium">
+                                  <Edit3 className="w-3.5 h-3.5 text-blue-600" />
+                                  <span>Editor</span>
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="viewer">
+                                <div className="flex items-center gap-1.5 font-medium">
+                                  <Eye className="w-3.5 h-3.5 text-amber-600" />
+                                  <span>Viewer</span>
+                                </div>
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
                           <button
                             onClick={() => handleRemoveCollaborator(c.user_id)}
-                            className="p-1 text-slate-400 hover:text-rose-600 rounded-md hover:bg-rose-50 transition-colors cursor-pointer"
+                            className="p-1.5 text-slate-400 hover:text-rose-600 rounded-md hover:bg-rose-50 transition-colors cursor-pointer"
                             title="Remove access"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
